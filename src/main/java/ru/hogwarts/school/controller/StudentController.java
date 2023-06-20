@@ -115,4 +115,25 @@ public class StudentController {
         return this.studentService.getAllStudents();
     }
 
+    @GetMapping("/age/{age}")
+    @Operation(summary = "Получение студентов по возрасту.")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Все студенты по возрасту получены.",
+                    content = {
+                            @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = Student.class)
+                            )
+                    }
+            )
+    })
+    public ResponseEntity<Collection<Student>> getStudentsByAge(@PathVariable Integer age) {
+        Collection<Student> result = studentService.getStudentsByAge(age);
+        if (result.size() == 0) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(result);
+    }
 }

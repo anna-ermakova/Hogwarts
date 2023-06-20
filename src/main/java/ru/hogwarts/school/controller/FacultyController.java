@@ -114,4 +114,26 @@ public class FacultyController {
         return this.facultyService.getAllFaculties();
     }
 
+    @GetMapping("/color/{color}")
+    @Operation(summary = "Получение факультетов по цвету.")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Все факультеты по цвету получены.",
+                    content = {
+                            @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = Faculty.class)
+                            )
+                    }
+            )
+    })
+    public ResponseEntity<Collection<Faculty>> getFacultiesByColor(@PathVariable String color) {
+        Collection<Faculty> result = facultyService.getFacultyByColor(color);
+        if (result.size() == 0) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(result);
+    }
+
 }

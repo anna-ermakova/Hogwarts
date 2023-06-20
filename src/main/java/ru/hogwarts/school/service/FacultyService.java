@@ -8,6 +8,7 @@ import ru.hogwarts.school.model.Faculty;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 public class FacultyService {
@@ -46,5 +47,11 @@ public class FacultyService {
         }
         faculties.put(id, faculty);
         return faculty;
+    }
+
+    public Collection<Faculty> getFacultyByColor(String color) {
+        return faculties.values().stream()
+                .filter(f -> f.getColor().equals(color)).
+                collect(Collectors.toList());
     }
 }

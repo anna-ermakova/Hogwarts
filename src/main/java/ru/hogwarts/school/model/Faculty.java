@@ -7,6 +7,7 @@ public class Faculty {
     private Long id;
     @NotBlank(message = "Обязательно для заполнения!")
     private String name;
+    @NotBlank(message = "Обязательно для заполнения!")
     private String color;
 
     public Long getId() {
