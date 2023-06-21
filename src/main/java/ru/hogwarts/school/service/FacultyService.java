@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 @Service
 public class FacultyService {
     private final Map<Long, Faculty> faculties = new HashMap<>();
-    private Long id = 0L;
+    private Long id = 1L;
 
     public Faculty addFaculty(Faculty faculty) {
         if (faculties.containsValue(faculty)) {
