@@ -8,7 +8,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import lombok.RequiredArgsConstructor;
+import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.hogwarts.school.model.Student;
@@ -16,10 +16,11 @@ import ru.hogwarts.school.service.StudentService;
 
 import javax.validation.Valid;
 import java.util.Collection;
+import java.util.Collections;
 
 @RestController
 @RequestMapping("/student")
-@RequiredArgsConstructor
+@AllArgsConstructor
 @Tag(name = "Студенты.", description = "CRUD-операции и другие эндпоинты для работы со студентами.")
 public class StudentController {
 
@@ -97,7 +98,7 @@ public class StudentController {
     }
 
 
-    @GetMapping
+    @GetMapping("/{all}")
     @Operation(summary = "Получение всех студентов.")
     @ApiResponses(value = {
             @ApiResponse(
@@ -111,7 +112,7 @@ public class StudentController {
                     }
             )
     })
-    public Collection<Student> getAllStudents() {
+    public Collection<Student> getAllStudents(@PathVariable String all) {
         return this.studentService.getAllStudents();
     }
 
@@ -129,11 +130,10 @@ public class StudentController {
                     }
             )
     })
-    public ResponseEntity<Collection<Student>> getStudentsByAge(@PathVariable Integer age) {
-        Collection<Student> result = studentService.getStudentsByAge(age);
-        if (result.size() == 0) {
-            return ResponseEntity.notFound().build();
+    public ResponseEntity<Collection<Student>> getStudentByAge(@RequestParam(required = false) int age) {
+        if (age > 0) {
+            return ResponseEntity.ok(studentService.getStudentsByAge(age));
         }
-        return ResponseEntity.ok(result);
+        return ResponseEntity.ok(Collections.emptyList());
     }
 }

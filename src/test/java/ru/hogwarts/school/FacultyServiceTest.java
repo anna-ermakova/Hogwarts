@@ -37,26 +37,26 @@ public class FacultyServiceTest {
         assertEquals(new Faculty(1L, "One", "red"), out.getFacultyById(1L));
     }
 
-    @Test
-    void getFacultyNegativeTest() {
+   // @Test
+   // void getFacultyNegativeTest() {
 
-    }
+   // }
 
     @Test
     void updateFacultyPositiveTest() {
         Faculty f = new Faculty(3L, "Three", "green");
         int size = out.getAllFaculties().size();
-        assertEquals(f, out.updatFaculty(f.getId(), f));
+        assertEquals(f, out.updatFaculty(f));
         assertEquals(size, out.getAllFaculties().size());
     }
 
-    @Test
-    void updateFacultyNegativeTest() {
-       // Faculty f = new Faculty(7L, "OOO", "ooo");
-      //  int size = out.getAllFaculties().size();
-       // assertNull(out.updatFaculty(f.getId(), f));
-      //  assertEquals(size, out.getAllFaculties().size());
-    }
+ // @Test
+ // void updateFacultyNegativeTest() {
+  //     Faculty f = new Faculty(7L, "OOO", "ooo");
+  //     int size = out.getAllFaculties().size();
+  ////      assertNull(out.updatFaculty(f));
+  //     assertEquals(size, out.getAllFaculties().size());
+ //  }
 
     @Test
     void removeFacultyPositiveTest() {
@@ -66,12 +66,12 @@ public class FacultyServiceTest {
         assertEquals(size - 1, out.getAllFaculties().size());
     }
 
-    @Test
-    void removeFacultyNegativeTest() {
+   // @Test
+   // void removeFacultyNegativeTest() {
         //int size = out.getAllFaculties().size();
        // assertNull(out.removeFaculty(7L));
       //  assertEquals(size, out.getAllFaculties().size());
-    }
+  //  }
 
     @Test
     void getFacultyByColorPositiveTest() {

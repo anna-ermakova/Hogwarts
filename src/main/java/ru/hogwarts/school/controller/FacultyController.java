@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.hogwarts.school.model.Faculty;
@@ -68,7 +69,7 @@ public class FacultyController {
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = "200",
-                    description = "Фасультет изменен.",
+                    description = "Факультет изменен.",
                     content = {
                             @Content(
                                     mediaType = "application/json",
@@ -78,10 +79,14 @@ public class FacultyController {
             )
     })
     @Parameters(value = {@Parameter(name = "id", example = "1")})
-    ResponseEntity<Faculty> updateFaculty(@PathVariable Long id, @Valid @RequestBody Faculty faculty) {
-        Faculty facultyReturn = facultyService.updatFaculty(id, faculty);
+    public ResponseEntity<Faculty> updateFaculty(@Valid @RequestBody Faculty faculty) {
+        Faculty facultyReturn = facultyService.updatFaculty(faculty);
+        if (facultyReturn == null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
         return ResponseEntity.ok(facultyReturn);
     }
+
 
     @DeleteMapping("/{id}")
     @Operation(summary = "Удаление факультета по id.")
@@ -96,7 +101,7 @@ public class FacultyController {
     }
 
 
-    @GetMapping
+    @GetMapping("/{all}")
     @Operation(summary = "Получение всех факультетов.")
     @ApiResponses(value = {
             @ApiResponse(
@@ -110,7 +115,7 @@ public class FacultyController {
                     }
             )
     })
-    public Collection<Faculty> getAllFaculties() {
+    public Collection<Faculty> getAllFaculties(@PathVariable String all) {
         return this.facultyService.getAllFaculties();
     }
 

@@ -7,19 +7,20 @@ import ru.hogwarts.school.model.Faculty;
 
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
 public class FacultyService {
-    private final Map<Long, Faculty> faculties = new HashMap<>();
-    private Long id = 1L;
+
+    private final HashMap<Long, Faculty> faculties = new HashMap<>();
+    private long count = 0;
 
     public Faculty addFaculty(Faculty faculty) {
         if (faculties.containsValue(faculty)) {
             throw new ExistsException("такой факультет уже есть");
         }
-        faculties.put(id++, faculty);
+        faculty.setId(count++);
+        faculties.put(faculty.getId(), faculty);
         return faculty;
     }
 
@@ -41,11 +42,11 @@ public class FacultyService {
         return faculties.remove(id);
     }
 
-    public Faculty updatFaculty(Long id, Faculty faculty) {
-        if (!faculties.containsKey(id)) {
+    public Faculty updatFaculty(Faculty faculty) {
+        if (!faculties.containsKey(faculty.getId())) {
             throw new NotFoundException("Нет факультета с указанным id");
         }
-        faculties.put(id, faculty);
+        faculties.put(faculty.getId(), faculty);
         return faculty;
     }
 

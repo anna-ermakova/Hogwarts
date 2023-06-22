@@ -7,19 +7,20 @@ import ru.hogwarts.school.model.Student;
 
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
 public class StudentService {
-    private final Map<Long, Student> students = new HashMap<>();
-    private Long id = 0L;
+
+    private final HashMap<Long, Student> students = new HashMap<>();
+    private long count = 0;
 
     public Student addStudent(Student student) {
         if (students.containsValue(student)) {
             throw new ExistsException("такой студент уже есть");
         }
-        students.put(id++, student);
+        student.setId(count++);
+        students.put(student.getId(), student);
         return student;
     }
 
@@ -42,10 +43,10 @@ public class StudentService {
     }
 
     public Student updatStudent(Long id, Student student) {
-        if (!students.containsKey(id)) {
+        if (!students.containsKey(student.getId())) {
             throw new NotFoundException("Нет студента с указанным id");
         }
-        students.put(id, student);
+        students.put(student.getId(), student);
         return student;
     }
 
