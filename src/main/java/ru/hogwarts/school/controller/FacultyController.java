@@ -12,14 +12,15 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.hogwarts.school.model.Faculty;
+import ru.hogwarts.school.dto.FacultyDtoOut;
+import ru.hogwarts.school.entity.Faculty;
 import ru.hogwarts.school.service.FacultyService;
 
 import javax.validation.Valid;
 import java.util.Collection;
 
 @RestController
-@RequestMapping("/faculty")
+@RequestMapping("/faculties")
 @RequiredArgsConstructor
 @Tag(name = "Факультеты.", description = "CRUD-операции и другие эндпоинты для работы с факультетами.")
 public class FacultyController {
@@ -41,7 +42,7 @@ public class FacultyController {
             )
     })
     @Parameters(value = {@Parameter(name = "id", example = "1")})
-    ResponseEntity<Faculty> getFaculty(@PathVariable Long id) {
+    ResponseEntity<FacultyDtoOut> getFaculty(@PathVariable("id") Long id) {
         Faculty faculty = facultyService.getFacultyById(id);
         return ResponseEntity.ok(faculty);
     }
@@ -60,8 +61,8 @@ public class FacultyController {
                     }
             )
     })
-    ResponseEntity<Faculty> addFaculty(@Valid @RequestBody Faculty faculty) {
-        return ResponseEntity.ok(facultyService.addFaculty(faculty));
+    ResponseEntity<FacultyDtoOut> addFaculty(@Valid @RequestBody FacultyDtoIn facultyDtoIn) {
+        return ResponseEntity.ok(facultyService.create(facultyDtoIn));
     }
 
     @PutMapping("/{id}")
@@ -79,8 +80,8 @@ public class FacultyController {
             )
     })
     @Parameters(value = {@Parameter(name = "id", example = "1")})
-    public ResponseEntity<Faculty> updateFaculty(@Valid @RequestBody Faculty faculty) {
-        Faculty facultyReturn = facultyService.updatFaculty(faculty);
+    public ResponseEntity<FacultyDtoOut> updateFaculty(@PathVariable("id") Long id, @Valid @RequestBody FacultyDtoIn facultyDtoIn) {
+        Faculty facultyReturn = facultyService.update(id, facultyDtoIn);
         if (facultyReturn == null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
@@ -96,8 +97,8 @@ public class FacultyController {
                     description = "Факультет удален."
             )})
     @Parameters(value = {@Parameter(name = "id", example = "1")})
-    ResponseEntity<Faculty> removeFaculty(@PathVariable Long id) {
-        return ResponseEntity.ok(facultyService.removeFaculty(id));
+    ResponseEntity<FacultyDtoOut> removeFaculty(@PathVariable("id") Long id) {
+        return ResponseEntity.ok(facultyService.delete(id));
     }
 
 
@@ -115,7 +116,7 @@ public class FacultyController {
                     }
             )
     })
-    public Collection<Faculty> getAllFaculties(@PathVariable String all) {
+    public Collection<FacultyDtoOut> getAllFaculties(@PathVariable("all") String all) {
         return this.facultyService.getAllFaculties();
     }
 
@@ -133,8 +134,8 @@ public class FacultyController {
                     }
             )
     })
-    public ResponseEntity<Collection<Faculty>> getFacultiesByColor(@PathVariable String color) {
-        Collection<Faculty> result = facultyService.getFacultyByColor(color);
+    public ResponseEntity<Collection<FacultyDtoOut>> getAllFacultiesByColor(@RequestParam(required = false) String color) {
+        Collection<Faculty> result = facultyService.getAllFacultyByColor(color);
         if (result.size() == 0) {
             return ResponseEntity.notFound().build();
         }

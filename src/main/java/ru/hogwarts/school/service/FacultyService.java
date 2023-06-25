@@ -1,56 +1,69 @@
 package ru.hogwarts.school.service;
 
 import org.springframework.stereotype.Service;
-import org.webjars.NotFoundException;
+import ru.hogwarts.school.dto.FacultyDtoIn;
+import ru.hogwarts.school.dto.FacultyDtoOut;
 import ru.hogwarts.school.exception.ExistsException;
-import ru.hogwarts.school.model.Faculty;
+import ru.hogwarts.school.exception.FacultyNotFoundException;
+import ru.hogwarts.school.entity.Faculty;
+import ru.hogwarts.school.repository.FacultiesRepository;
 
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
 public class FacultyService {
 
-    private final HashMap<Long, Faculty> faculties = new HashMap<>();
-    private long count = 0;
+    private final FacultiesRepository facultiesRepository;
 
-    public Faculty addFaculty(Faculty faculty) {
-        if (faculties.containsValue(faculty)) {
+    public FacultyService(FacultiesRepository facultiesRepository) {
+        this.facultiesRepository = facultiesRepository;
+    }
+
+    public FacultyDtoOut create(FacultyDtoIn facultyDtoIn) {
+        if (faculties.containsValue(facultyDtoIn)) {
             throw new ExistsException("такой факультет уже есть");
         }
-        faculty.setId(count++);
-        faculties.put(faculty.getId(), faculty);
-        return faculty;
+        faculties.put(count, facultyDtoIn);
+        return facultyDtoIn;
     }
 
-    public Faculty getFacultyById(Long id) {
-        if (!faculties.containsKey(id)) {
-            throw new NotFoundException("Нет факультета с указанным id");
+    public FacultyDtoOut getFacultyById(Long id) {
+        if (faculties.containsKey(id)) {
+            return faculties.get(id);
+        } else {
+            throw new FacultyNotFoundException(id);
         }
-        return faculties.get(id);
     }
 
-    public Collection<Faculty> getAllFaculties() {
+    public Collection<FacultyDtoOut> getAllFaculties() {
         return faculties.values();
     }
 
-    public Faculty removeFaculty(Long id) {
-        if (!faculties.containsKey(id)) {
-            throw new NotFoundException("Нет факультета с указанным id");
+    public Faculty delete(Long id) {
+        if (faculties.containsKey(id)) {
+            return faculties.remove(id);
+        } else {
+            throw new FacultyNotFoundException(id);
         }
-        return faculties.remove(id);
     }
 
-    public Faculty updatFaculty(Faculty faculty) {
-        if (!faculties.containsKey(faculty.getId())) {
-            throw new NotFoundException("Нет факультета с указанным id");
+    public FacultyDtoOut update(long id, FacultyDtoIn facultyDtoIn) {
+        if (faculties.containsKey(id)) {
+            Faculty oldFaculty = faculties.get(id);
+            oldFaculty.setName(faculty.getName());
+            oldFaculty.setColor(faculty.getColor());
+            faculties.replace(id, oldFaculty);
+            return oldFaculty;
+        } else {
+            throw new FacultyNotFoundException(id);
         }
-        faculties.put(faculty.getId(), faculty);
-        return faculty;
     }
 
-    public Collection<Faculty> getFacultyByColor(String color) {
+
+    public Collection<FacultyDtoOut> getAllFacultyByColor(String color) {
         return faculties.values().stream()
                 .filter(f -> f.getColor().equals(color)).
                 collect(Collectors.toList());

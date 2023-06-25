@@ -2,7 +2,7 @@ package ru.hogwarts.school;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import ru.hogwarts.school.model.Faculty;
+import ru.hogwarts.school.entity.Faculty;
 import ru.hogwarts.school.service.FacultyService;
 
 import java.util.Collections;

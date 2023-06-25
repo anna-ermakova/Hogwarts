@@ -8,10 +8,11 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.hogwarts.school.model.Student;
+import ru.hogwarts.school.dto.StudentDtoIn;
+import ru.hogwarts.school.dto.StudentDtoOut;
+import ru.hogwarts.school.entity.Student;
 import ru.hogwarts.school.service.StudentService;
 
 import javax.validation.Valid;
@@ -19,13 +20,16 @@ import java.util.Collection;
 import java.util.Collections;
 
 @RestController
-@RequestMapping("/student")
-@AllArgsConstructor
+@RequestMapping("/students")
 @Tag(name = "Студенты.", description = "CRUD-операции и другие эндпоинты для работы со студентами.")
 public class StudentController {
 
 
     private final StudentService studentService;
+
+    public StudentController(StudentService studentService) {
+        this.studentService = studentService;
+    }
 
     @GetMapping("/{id}")
     @Operation(summary = "Получение студента по id.")
@@ -42,7 +46,7 @@ public class StudentController {
             )
     })
     @Parameters(value = {@Parameter(name = "id", example = "1")})
-    ResponseEntity<Student> getStudent(@PathVariable Long id) {
+    ResponseEntity<StudentDtoOut> getStudent(@PathVariable("id") Long id) {
         Student student = studentService.getStudentById(id);
         return ResponseEntity.ok(student);
     }
@@ -61,8 +65,8 @@ public class StudentController {
                     }
             )
     })
-    ResponseEntity<Student> addStudent(@Valid @RequestBody Student student) {
-        return ResponseEntity.ok(studentService.addStudent(student));
+    ResponseEntity<StudentDtoOut> addStudent(@Valid @RequestBody StudentDtoIn studentDtoIn) {
+        return ResponseEntity.ok(studentService.create(studentDtoIn));
     }
 
     @PutMapping("/{id}")
@@ -80,8 +84,8 @@ public class StudentController {
             )
     })
     @Parameters(value = {@Parameter(name = "id", example = "1")})
-    ResponseEntity<Student> updateStudent(@PathVariable Long id, @Valid @RequestBody Student student) {
-        Student studentReturn = studentService.updatStudent(id, student);
+    ResponseEntity<StudentDtoOut> updateStudent(@PathVariable("id") Long id, @Valid @RequestBody StudentDtoIn studentDtoIn) {
+        Student studentReturn = studentService.update(id, studentDtoIn);
         return ResponseEntity.ok(studentReturn);
     }
 
@@ -93,8 +97,8 @@ public class StudentController {
                     description = "Студент удален."
             )})
     @Parameters(value = {@Parameter(name = "id", example = "1")})
-    ResponseEntity<Student> removeStudent(@PathVariable Long id) {
-        return ResponseEntity.ok(studentService.removeStudent(id));
+    ResponseEntity<StudentDtoOut> removeStudent(@PathVariable("id") Long id) {
+        return ResponseEntity.ok(studentService.delete(id));
     }
 
 
@@ -112,7 +116,7 @@ public class StudentController {
                     }
             )
     })
-    public Collection<Student> getAllStudents(@PathVariable String all) {
+    public Collection<StudentDtoOut> getAllStudents(@PathVariable("all") String all) {
         return this.studentService.getAllStudents();
     }
 
@@ -130,7 +134,7 @@ public class StudentController {
                     }
             )
     })
-    public ResponseEntity<Collection<Student>> getStudentByAge(@RequestParam(required = false) int age) {
+    public ResponseEntity<Collection<StudentDtoOut>> getStudentByAge(@RequestParam(required = false) Integer age) {
         if (age > 0) {
             return ResponseEntity.ok(studentService.getStudentsByAge(age));
         }
