@@ -8,7 +8,6 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.hogwarts.school.dto.StudentDtoIn;
 import ru.hogwarts.school.dto.StudentDtoOut;
@@ -16,39 +15,17 @@ import ru.hogwarts.school.entity.Student;
 import ru.hogwarts.school.service.StudentService;
 
 import javax.validation.Valid;
-import java.util.Collection;
-import java.util.Collections;
+import java.util.List;
 
 @RestController
 @RequestMapping("/students")
 @Tag(name = "Студенты.", description = "CRUD-операции и другие эндпоинты для работы со студентами.")
 public class StudentController {
 
-
     private final StudentService studentService;
 
     public StudentController(StudentService studentService) {
         this.studentService = studentService;
-    }
-
-    @GetMapping("/{id}")
-    @Operation(summary = "Получение студента по id.")
-    @ApiResponses(value = {
-            @ApiResponse(
-                    responseCode = "200",
-                    description = "Студент получен.",
-                    content = {
-                            @Content(
-                                    mediaType = "application/json",
-                                    schema = @Schema(implementation = Student.class)
-                            )
-                    }
-            )
-    })
-    @Parameters(value = {@Parameter(name = "id", example = "1")})
-    ResponseEntity<StudentDtoOut> getStudent(@PathVariable("id") Long id) {
-        Student student = studentService.getStudentById(id);
-        return ResponseEntity.ok(student);
     }
 
     @PostMapping
@@ -65,8 +42,8 @@ public class StudentController {
                     }
             )
     })
-    ResponseEntity<StudentDtoOut> addStudent(@Valid @RequestBody StudentDtoIn studentDtoIn) {
-        return ResponseEntity.ok(studentService.create(studentDtoIn));
+    public StudentDtoOut create(@Valid @RequestBody StudentDtoIn studentDtoIn) {
+        return studentService.create(studentDtoIn);
     }
 
     @PutMapping("/{id}")
@@ -84,9 +61,27 @@ public class StudentController {
             )
     })
     @Parameters(value = {@Parameter(name = "id", example = "1")})
-    ResponseEntity<StudentDtoOut> updateStudent(@PathVariable("id") Long id, @Valid @RequestBody StudentDtoIn studentDtoIn) {
-        Student studentReturn = studentService.update(id, studentDtoIn);
-        return ResponseEntity.ok(studentReturn);
+    public StudentDtoOut update(@PathVariable("id") Long id, @Valid @RequestBody StudentDtoIn studentDtoIn) {
+        return studentService.update(id, studentDtoIn);
+    }
+
+    @GetMapping("/{id}")
+    @Operation(summary = "Получение студента по id.")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Студент получен.",
+                    content = {
+                            @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = Student.class)
+                            )
+                    }
+            )
+    })
+    @Parameters(value = {@Parameter(name = "id", example = "1")})
+    public StudentDtoOut get(@PathVariable("id") Long id) {
+        return studentService.getStudentById(id);
     }
 
     @DeleteMapping("/{id}")
@@ -97,30 +92,11 @@ public class StudentController {
                     description = "Студент удален."
             )})
     @Parameters(value = {@Parameter(name = "id", example = "1")})
-    ResponseEntity<StudentDtoOut> removeStudent(@PathVariable("id") Long id) {
-        return ResponseEntity.ok(studentService.delete(id));
+    public StudentDtoOut delete(@PathVariable("id") Long id) {
+        return studentService.delete(id);
     }
 
-
-    @GetMapping("/{all}")
-    @Operation(summary = "Получение всех студентов.")
-    @ApiResponses(value = {
-            @ApiResponse(
-                    responseCode = "200",
-                    description = "Все студенты получены.",
-                    content = {
-                            @Content(
-                                    mediaType = "application/json",
-                                    schema = @Schema(implementation = Student.class)
-                            )
-                    }
-            )
-    })
-    public Collection<StudentDtoOut> getAllStudents(@PathVariable("all") String all) {
-        return this.studentService.getAllStudents();
-    }
-
-    @GetMapping("/age/{age}")
+    @GetMapping
     @Operation(summary = "Получение студентов по возрасту.")
     @ApiResponses(value = {
             @ApiResponse(
@@ -134,10 +110,7 @@ public class StudentController {
                     }
             )
     })
-    public ResponseEntity<Collection<StudentDtoOut>> getStudentByAge(@RequestParam(required = false) Integer age) {
-        if (age > 0) {
-            return ResponseEntity.ok(studentService.getStudentsByAge(age));
-        }
-        return ResponseEntity.ok(Collections.emptyList());
+    public List<StudentDtoOut> getStudentByAge(@RequestParam(required = false) Integer age) {
+        return studentService.getStudentsByAge(age);
     }
 }

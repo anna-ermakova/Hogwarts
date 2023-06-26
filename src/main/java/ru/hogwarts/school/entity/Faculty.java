@@ -4,15 +4,16 @@ import jakarta.persistence.*;
 
 import javax.validation.constraints.NotBlank;
 import java.util.Objects;
+
 @Entity
-@Table(name = "faculties")
+//@Table(name = "faculty")
 public class Faculty {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue//(strategy = GenerationType.IDENTITY)
     private Long id;
-    @NotBlank(message = "Обязательно для заполнения!")
+    //@NotBlank(message = "Обязательно для заполнения!")
     private String name;
-    @NotBlank(message = "Обязательно для заполнения!")
+   // @NotBlank(message = "Обязательно для заполнения!")
     private String color;
 
     public Long getId() {

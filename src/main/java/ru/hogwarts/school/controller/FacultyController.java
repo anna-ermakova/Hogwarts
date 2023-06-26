@@ -84,7 +84,6 @@ public class FacultyController {
         return facultyService.getFacultyById(id);
     }
 
-
     @DeleteMapping("/{id}")
     @Operation(summary = "Удаление факультета по id.")
     @ApiResponses(value = {
@@ -96,7 +95,6 @@ public class FacultyController {
     public FacultyDtoOut delete(@PathVariable("id") Long id) {
         return facultyService.delete(id);
     }
-
 
     @GetMapping
     @Operation(summary = "Получение факультетов по цвету.")

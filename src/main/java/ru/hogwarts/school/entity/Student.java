@@ -6,15 +6,15 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Positive;
 import java.util.Objects;
 @Entity
-@Table(name = "students")
+//@Table(name = "student")
 public class Student {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue//(strategy = GenerationType.IDENTITY)
     private Long id;
-    @NotBlank(message = "Обязательно для заполнения!")
+    //@NotBlank(message = "Обязательно для заполнения!")
     private String name;
-    @NotBlank(message = "Обязательно для заполнения!")
-    @Positive
+    //@NotBlank(message = "Обязательно для заполнения!")
+   // @Positive
     private int age;
 
     public Long getId() {

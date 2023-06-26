@@ -9,7 +9,6 @@ import ru.hogwarts.school.exception.FacultyNotFoundException;
 import ru.hogwarts.school.mapper.FacultyMapper;
 import ru.hogwarts.school.repository.FacultiesRepository;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
