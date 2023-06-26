@@ -96,7 +96,7 @@ public class FacultyController {
         return facultyService.delete(id);
     }
 
-    @GetMapping
+    @GetMapping("/color/{color}")
     @Operation(summary = "Получение факультетов по цвету.")
     @ApiResponses(value = {
             @ApiResponse(
@@ -110,7 +110,7 @@ public class FacultyController {
                     }
             )
     })
-    public List<FacultyDtoOut> getAllFacultiesByColor(@RequestParam(required = false) String color) {
+    public List<FacultyDtoOut> getAllFacultiesByColor(@PathVariable String color) {
         return facultyService.getAllFacultyByColor(color);
     }
 }

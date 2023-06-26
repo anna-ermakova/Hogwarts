@@ -96,7 +96,7 @@ public class StudentController {
         return studentService.delete(id);
     }
 
-    @GetMapping
+    @GetMapping("/age/{age}")
     @Operation(summary = "Получение студентов по возрасту.")
     @ApiResponses(value = {
             @ApiResponse(
@@ -110,7 +110,7 @@ public class StudentController {
                     }
             )
     })
-    public List<StudentDtoOut> getStudentByAge(@RequestParam(required = false) Integer age) {
+    public List<StudentDtoOut> getStudentByAge(@PathVariable int age) {
         return studentService.getStudentsByAge(age);
     }
 }
