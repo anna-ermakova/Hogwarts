@@ -3,5 +3,8 @@ package ru.hogwarts.school.repository;
 import org.springframework.data.jpa.repository.JpaRepository;
 import ru.hogwarts.school.entity.Faculty;
 
+import java.util.List;
+
 public interface FacultiesRepository extends JpaRepository<Faculty,Long> {
+    List<Faculty> findAllByColor(String color);
 }
